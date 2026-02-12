@@ -6,6 +6,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 // Public Route to Home
 Route::get('/', [
@@ -61,3 +62,14 @@ Route::delete('/cart/{cart_item}', [CartController::class, 'destroy'])->name('ca
 //     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 //     Route::post('/checkout', [OrderController::class, 'store'])->name('checkout');
 // });
+
+// Authentication Pages (Fortify backend, Inertia frontend)
+Route::middleware('guest')->group(function () {
+    Route::get('/login', function () {
+        return Inertia::render('Auth/Login');
+    })->name('login');
+
+    Route::get('/register', function () {
+        return Inertia::render('Auth/Register');
+    })->name('register');
+});
