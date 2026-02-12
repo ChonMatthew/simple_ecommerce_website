@@ -17,7 +17,7 @@ class OrderController extends Controller
         // TEMP: no auth yet – use test user id 1
         $userId = 1;
 
-        $orders = Order::with('orderItems.product')
+        $orders = Order::with('order_items.product')
             ->where('user_id', $userId)
             ->latest()
             ->get();
@@ -81,7 +81,7 @@ class OrderController extends Controller
             abort(403);
         }
 
-        $order->load('orderItems.product');
+        $order->load('order_items.product');
 
         return view('orders.show', compact('order'));
     }

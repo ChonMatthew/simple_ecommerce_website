@@ -16,8 +16,8 @@ Route::get('/products/{product}', [ProductController::class, 'show'])->name('pro
 // Cart Routes (no login required)
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
-Route::patch('/cart/{cartItem}', [CartController::class, 'update'])->name('cart.update');
-Route::delete('/cart/{cartItem}', [CartController::class, 'destroy'])->name('cart.destroy');
+Route::patch('/cart/{cart_item}', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/{cart_item}', [CartController::class, 'destroy'])->name('cart.destroy');
 
 // Order Routes (no login required)
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
