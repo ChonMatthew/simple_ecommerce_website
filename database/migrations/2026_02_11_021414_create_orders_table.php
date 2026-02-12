@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignIdFor(User::class, 'user_id')->nullable();
+            $table->foreignIdFor(User::class, 'user_id')->nullable()->constrained()->nullOnDelete();
             $table->decimal('total_price',20,2)->default(0);
             $table->string('status', 45);
         });
