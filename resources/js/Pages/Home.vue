@@ -1,5 +1,6 @@
 <script setup>
 import Layout from "../Layouts/Layout.vue";
+import { router } from "@inertiajs/vue3";
 
 const props = defineProps({
     featuredProducts: {
@@ -7,6 +8,19 @@ const props = defineProps({
         default: () => [],
     },
 });
+
+const addToCart = (productId) => {
+    router.post(
+        "/cart",
+        {
+            product_id: productId,
+            quantity: 1,
+        },
+        {
+            preserveScroll: true,
+        },
+    );
+};
 </script>
 
 <template>
