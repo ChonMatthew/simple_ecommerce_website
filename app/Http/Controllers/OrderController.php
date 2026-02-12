@@ -19,7 +19,7 @@ class OrderController extends Controller
     {
         $userId = Auth::id();
 
-        $orders = Order::with('order_items.product')
+        $orders = Order::with('orderItems.product')
             ->where('user_id', $userId)
             ->latest()
             ->get();
@@ -70,7 +70,7 @@ class OrderController extends Controller
         Cart_item::where('user_id', $userId)->delete();
 
         return redirect()
-            ->route('orders.show', $order)
+            ->route('cart.index', $order)
             ->with('success', 'Order placed successfully.');
     }
 
@@ -85,7 +85,7 @@ class OrderController extends Controller
             abort(403);
         }
 
-        $order->load('order_items.product');
+        $order->load('orderItems.product');
 
         return view('orders.show', compact('order'));
     }

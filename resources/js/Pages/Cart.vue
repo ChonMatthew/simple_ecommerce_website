@@ -1,6 +1,7 @@
 <script setup>
 import Layout from "../Layouts/Layout.vue";
-import { router } from "@inertiajs/vue3";
+import { computed } from "vue";
+import { router, usePage } from "@inertiajs/vue3";
 
 const props = defineProps({
     items: {
@@ -12,6 +13,9 @@ const props = defineProps({
         default: 0,
     },
 });
+
+const page = usePage();
+const user = computed(() => page.props.auth?.user || null);
 
 const updateQuantity = (item, quantity) => {
     const q = Number(quantity);
@@ -30,6 +34,10 @@ const removeItem = (item) => {
     router.delete(`/cart/${item.id}`, {
         preserveScroll: true,
     });
+};
+
+const checkout = () => {
+  router.post("/checkout");
 };
 </script>
 
@@ -125,6 +133,25 @@ const removeItem = (item) => {
                         ${{ Number(props.total).toFixed(2) }}
                     </span>
                 </div>
+
+                <div
+                    v-if="props.items.length && user"
+                    class="mt-4 flex justify-end"
+                >
+                    <button
+                        type="button"
+                        class="inline-flex items-center justify-center rounded bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+                        @click="checkout"
+                    >
+                        Place order
+                    </button>
+                </div>
+                <p
+                    v-else-if="props.items.length && !user"
+                    class="mt-4 text-sm text-slate-500"
+                >
+                    Please log in to place your order.
+                </p>
             </div>
         </section>
     </Layout>
