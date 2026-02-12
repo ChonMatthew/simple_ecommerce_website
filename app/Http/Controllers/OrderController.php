@@ -48,17 +48,17 @@ class OrderController extends Controller
 
         // Create order
         $order = Order::create([
-            'user_id'     => $userId,
+            'user_id' => $userId,
             'total_price' => $total,
-            'status'      => 'pending',
+            'status' => 'pending',
         ]);
 
         foreach ($cartItems as $item) {
             Order_item::create([
-                'order_id'   => $order->id,
+                'order_id' => $order->id,
                 'product_id' => $item->product_id,
-                'quantity'   => $item->quantity,
-                'price'      => $item->product->price, // price at time of order
+                'quantity' => $item->quantity,
+                'price' => $item->product->price, // price at time of order
             ]);
         }
 

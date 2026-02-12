@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart_item;
-use App\Models\Product;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class CartController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         $userId = 1;
 
@@ -24,7 +25,11 @@ class CartController extends Controller
             return $carry + ($item->product->price * $item->quantity);
         }, 0);
 
-        return view('cart.index', compact('items', 'total'));
+        return Inertia::render(
+            'Cart', [
+                'items' => $items,
+                'total' => $total,
+            ]);
     }
 
     /**
@@ -36,7 +41,7 @@ class CartController extends Controller
 
         $data = $request->validate([
             'product_id' => ['required', 'exists:products,id'],
-            'quantity'   => ['nullable', 'integer', 'min:1'],
+            'quantity' => ['nullable', 'integer', 'min:1'],
         ]);
 
         $quantity = $data['quantity'] ?? 1;
@@ -51,14 +56,14 @@ class CartController extends Controller
             $item->save();
         } else {
             Cart_item::create([
-                'user_id'    => $userId,
+                'user_id' => $userId,
                 'product_id' => $data['product_id'],
-                'quantity'   => $quantity,
+                'quantity' => $quantity,
             ]);
         }
 
         return redirect()
-            ->route('cart.index')
+            ->back()
             ->with('success', 'Item added to cart.');
     }
 

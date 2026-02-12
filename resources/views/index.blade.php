@@ -1,9 +1,11 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <title>Simple Store</title>
 </head>
+
 <body>
     <header>
         <h1>Simple E-Commerce Store</h1>
@@ -14,7 +16,7 @@
     </header>
 
     <main>
-    <section>
+        <section>
             <h2>Featured products</h2>
 
             @if ($featuredProducts->isEmpty())
@@ -39,4 +41,5 @@
         </section>
     </main>
 </body>
+
 </html>
