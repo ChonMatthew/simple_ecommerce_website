@@ -33,6 +33,24 @@ Route::post('/cart', [
 Route::patch('/cart/{cart_item}', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart/{cart_item}', [CartController::class, 'destroy'])->name('cart.destroy');
 
+// Authentication Pages (Fortify backend, Inertia frontend)
+Route::middleware('guest')->group(function () {
+    Route::get('/login', function () {
+        return Inertia::render('Auth/Login');
+    })->name('login');
+
+    Route::get('/register', function () {
+        return Inertia::render('Auth/Register');
+    })->name('register');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::post('/checkout', [OrderController::class, 'store'])->name('checkout');
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+});
+
+
 // Public Routes (no login required)
 // Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 // Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
@@ -63,13 +81,3 @@ Route::delete('/cart/{cart_item}', [CartController::class, 'destroy'])->name('ca
 //     Route::post('/checkout', [OrderController::class, 'store'])->name('checkout');
 // });
 
-// Authentication Pages (Fortify backend, Inertia frontend)
-Route::middleware('guest')->group(function () {
-    Route::get('/login', function () {
-        return Inertia::render('Auth/Login');
-    })->name('login');
-
-    Route::get('/register', function () {
-        return Inertia::render('Auth/Register');
-    })->name('register');
-});

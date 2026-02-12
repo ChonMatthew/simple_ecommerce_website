@@ -6,23 +6,27 @@ use App\Models\Cart_item;
 use App\Models\Order;
 use App\Models\Order_item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
-        // TEMP: no auth yet – use test user id 1
-        $userId = 1;
+        $userId = Auth::id();
 
         $orders = Order::with('order_items.product')
             ->where('user_id', $userId)
             ->latest()
             ->get();
 
-        return view('orders.index', compact('orders'));
+        return Inertia::render(
+            'Orders', [
+            ]);
     }
 
     /**
@@ -30,7 +34,7 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $userId = 1;
+        $userId = Auth::id();
 
         $cartItems = Cart_item::with('product')
             ->where('user_id', $userId)
@@ -75,7 +79,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        $userId = 1;
+        $userId = Auth::id();
 
         if ($order->user_id !== $userId) {
             abort(403);
