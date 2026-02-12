@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
@@ -45,11 +46,11 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    Route::get('/account', [AccountController::class, 'show'])->name('account.show');
     Route::post('/checkout', [OrderController::class, 'store'])->name('checkout');
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 });
-
 
 // Public Routes (no login required)
 // Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -80,4 +81,3 @@ Route::middleware('auth')->group(function () {
 //     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 //     Route::post('/checkout', [OrderController::class, 'store'])->name('checkout');
 // });
-
