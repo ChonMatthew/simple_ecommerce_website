@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,7 +22,7 @@ Route::delete('/cart/{cartItem}', [CartController::class, 'destroy'])->name('car
 // Order Routes (no login required)
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+Route::post('/checkout', [OrderController::class, 'store'])->name('checkout');
 
 // TODO: Add login required routes
 // // Cart Routes (login required)
@@ -34,5 +37,5 @@ Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout')
 // Route::middleware('auth')->group(function () {
 //     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 //     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-//     Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+//     Route::post('/checkout', [OrderController::class, 'store'])->name('checkout');
 // });
