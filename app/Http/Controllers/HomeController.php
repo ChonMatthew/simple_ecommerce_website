@@ -12,6 +12,7 @@ class HomeController extends Controller
      */
     public function index(): \Inertia\Response
     {
+        // Shows the 4 latest products added
         $featuredProducts = Product::query()
             ->latest()
             ->take(4)

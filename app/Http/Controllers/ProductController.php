@@ -3,18 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
-        $products = Product::query()->latest()->get();
+        $products = Product::query()
+            ->latest()
+            ->get();
 
-        return view('products.index', compact('products'));
+        return Inertia::render('Shop', [
+            'products' => $products,
+        ]);
     }
 
-    public function show(Product $product)
+    public function show(Product $product): Response
     {
-        return view('products.show', compact('product'));
+        return Inertia::render('Product', [
+            'product' => $product,
+        ]);
     }
 }

@@ -16,10 +16,11 @@ class AccountController extends Controller
     {
         $user = Auth::user();
 
-        $orders = Order::query()
+        // Collects all orders tied to the user's id.
+        $orders = Order::with('orderItems.product')
             ->where('user_id', $user->id)
             ->latest()
-            ->get(['id', 'total_price', 'status']);
+            ->get();
 
         return Inertia::render('Account', [
             'user' => $user,

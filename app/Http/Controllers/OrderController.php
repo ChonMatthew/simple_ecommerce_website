@@ -13,23 +13,6 @@ use Inertia\Response;
 class OrderController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index(): Response
-    {
-        $userId = Auth::id();
-
-        $orders = Order::with('orderItems.product')
-            ->where('user_id', $userId)
-            ->latest()
-            ->get();
-
-        return Inertia::render(
-            'Orders', [
-            ]);
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -50,11 +33,19 @@ class OrderController extends Controller
             return $carry + ($item->product->price * $item->quantity);
         }, 0);
 
+        // Get status from request, default to 'pending'
+        $status = $request->input('status', 'pending');
+
+        // Validate status
+        if (!in_array($status, ['pending', 'paid'])) {
+            $status = 'pending';
+        }
+
         // Create order
         $order = Order::create([
             'user_id' => $userId,
             'total_price' => $total,
-            'status' => 'pending',
+            'status' => $status,
         ]);
 
         foreach ($cartItems as $item) {
@@ -77,6 +68,8 @@ class OrderController extends Controller
     /**
      * Display the specified resource.
      */
+
+     // TODO: Currently unused for showing the Modal
     public function show(Order $order)
     {
         $userId = Auth::id();
@@ -88,5 +81,68 @@ class OrderController extends Controller
         $order->load('orderItems.product');
 
         return view('orders.show', compact('order'));
+    }
+
+    /**
+     * Updates the order from the database
+     */
+    public function update(Request $request, Order $order)
+    {
+        $userId = Auth::id();
+
+        // Ensure this order belongs to the authenticated user
+        if ($order->user_id !== $userId) {
+            abort(403);
+        }
+
+        // Only allow updating status for pending orders
+        if ($order->status !== 'pending') {
+            return redirect()
+                ->route('account.show')
+                ->with('error', 'Only pending orders can be updated.');
+        }
+
+        $status = $request->input('status');
+
+        // Validate status
+        if (!in_array($status, ['paid'])) {
+            return redirect()
+                ->route('account.show')
+                ->with('error', 'Invalid status.');
+        }
+
+        $order->update([
+            'status' => $status,
+        ]);
+
+        return redirect()
+            ->route('account.show')
+            ->with('success', 'Order status updated successfully.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Order $order)
+    {
+        $userId = Auth::id();
+
+        // Ensure this order belongs to the authenticated user
+        if ($order->user_id !== $userId) {
+            abort(403);
+        }
+
+        // Only allow deleting pending orders
+        if ($order->status !== 'pending') {
+            return redirect()
+                ->route('account.show')
+                ->with('error', 'Only pending orders can be cancelled.');
+        }
+
+        $order->delete();
+
+        return redirect()
+            ->route('account.show')
+            ->with('success', 'Order cancelled successfully.');
     }
 }

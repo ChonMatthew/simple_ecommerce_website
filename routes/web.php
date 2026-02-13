@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -13,25 +14,9 @@ Route::get('/', [
     HomeController::class, 'index'])->name('home');
 
 // Public Route to Shop Page
-Route::get('/products', function () {
-    $products = Product::query()
-        ->latest()
-        ->get();
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
-    return inertia('Shop', [
-        'products' => $products,
-    ]);
-});
-
-// Route to Cart
-Route::get('/cart', [
-    CartController::class, 'index'])->name('cart.index');
-
-Route::post('/cart', [
-    CartController::class, 'store'])->name('cart.store');
-
-Route::patch('/cart/{cart_item}', [CartController::class, 'update'])->name('cart.update');
-Route::delete('/cart/{cart_item}', [CartController::class, 'destroy'])->name('cart.destroy');
+Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
 // Authentication Pages (Fortify backend, Inertia frontend)
 Route::middleware('guest')->group(function () {
@@ -45,10 +30,21 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+    // Route to Cart
+    Route::get('/cart', [
+        CartController::class, 'index'])->name('cart.index');
+
+    Route::post('/cart', [
+        CartController::class, 'store'])->name('cart.store');
+
+    Route::patch('/cart/{cart_item}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/{cart_item}', [CartController::class, 'destroy'])->name('cart.destroy');
+
+    // Account and Orders
     Route::get('/account', [AccountController::class, 'show'])->name('account.show');
     Route::post('/checkout', [OrderController::class, 'store'])->name('checkout');
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::patch('/orders/{order}', [OrderController::class, 'update'])->name('orders.update');
+    Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy');
 });
-
-

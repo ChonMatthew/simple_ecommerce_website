@@ -14,8 +14,8 @@ class CartController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request): Response
-{
-    if (Auth::check()) {
+    {
+        // Must be logged in
         $userId = Auth::id();
 
         $items = Cart_item::with('product')
@@ -33,46 +33,6 @@ class CartController extends Controller
         ]);
     }
 
-    // Guest: build items from session
-    $sessionCart = $request->session()->get('cart', []); // [product_id => quantity]
-
-    if (empty($sessionCart)) {
-        return Inertia::render('Cart', [
-            'items' => [],
-            'total' => 0,
-        ]);
-    }
-
-    $productIds = array_keys($sessionCart);
-
-    $products = \App\Models\Product::whereIn('id', $productIds)
-        ->get()
-        ->keyBy('id');
-
-    $items = collect($sessionCart)->map(function ($quantity, $productId) use ($products) {
-        $product = $products[$productId] ?? null;
-        if (! $product) {
-            return null;
-        }
-
-        return [
-            'id'      => $productId,      // just something stable for :key
-            'product' => $product,        // Cart.vue expects item.product.*
-            'quantity'=> $quantity,
-        ];
-    })->filter()->values();
-
-    $total = $items->reduce(
-        fn ($carry, $item) => $carry + ($item['product']->price * $item['quantity']),
-        0
-    );
-
-    return Inertia::render('Cart', [
-        'items' => $items,
-        'total' => $total,
-    ]);
-}
-
     /**
      * Store a newly created resource in storage.
      */
@@ -84,22 +44,9 @@ class CartController extends Controller
         ]);
 
         $quantity = $data['quantity'] ?? 1;
-
-        if (! Auth::check()) {
-            $cart = $request->session()->get('cart', []);
-
-            $cart[$data['product_id']] = ($cart[$data['product_id']] ?? 0) + $quantity;
-
-            $request->session()->put('cart', $cart);
-
-            return redirect()->back()->with('success', 'Item added to cart');
-        }
-
         $userId = Auth::id();
 
-        // Because of the unique (user_id, product_id), update or create
-        $item = Cart_item::where('user_id',
-            $userId)
+        $item = Cart_item::where('user_id', $userId)
             ->where('product_id', $data['product_id'])
             ->first();
 
@@ -126,7 +73,7 @@ class CartController extends Controller
     {
         $userId = Auth::id();
 
-        // Ensure this cart item belongs to our temp user
+        // Ensure this cart item belongs to the authenticated user
         if ($cart_item->user_id !== $userId) {
             abort(403);
         }
