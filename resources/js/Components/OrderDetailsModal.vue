@@ -26,7 +26,7 @@ defineEmits(["close", "pay", "cancel"]);
         <div
             class="relative z-10 w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-lg bg-white shadow-xl"
         >
-            <!-- Modal Header -->
+            <!--Modal Header-->
             <div
                 class="sticky top-0 bg-white border-b border-slate-200 px-8 py-6 rounded-t-lg"
             >
@@ -61,7 +61,7 @@ defineEmits(["close", "pay", "cancel"]);
                 </div>
             </div>
 
-            <!-- Modal Body -->
+            <!--Modal Body-->
             <div class="px-8 py-6 space-y-6">
                 <div
                     class="flex items-center justify-between rounded-lg bg-slate-50 px-4 py-3"
@@ -110,7 +110,7 @@ defineEmits(["close", "pay", "cancel"]);
                 </div>
             </div>
 
-            <!-- Modal Footer -->
+            <!--Modal Footer-->
             <div
                 class="sticky bottom-0 bg-white border-t border-slate-200 px-8 py-4 rounded-b-lg"
             >

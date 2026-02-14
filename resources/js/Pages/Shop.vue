@@ -131,8 +131,9 @@ watch(
                                         : 'border border-slate-300 text-slate-700 hover:bg-slate-50',
                                 ]"
                                 preserve-state
-                                v-html="link.label"
-                            />
+                            >
+                                <span v-html="link.label"></span>
+                            </Link>
                             <span
                                 v-else
                                 :class="[

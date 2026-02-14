@@ -58,7 +58,7 @@ const onRemove = () => emit("remove", props.item);
             source === 'cart' ? 'p-6 hover:shadow-md transition' : 'p-4',
         ]"
     >
-        <!-- Product Image -->
+        <!--Product Image-->
         <div
             :class="[
                 'flex-shrink-0 overflow-hidden rounded-lg bg-slate-100 flex items-center justify-center',
@@ -79,7 +79,7 @@ const onRemove = () => emit("remove", props.item);
             </div>
         </div>
 
-        <!-- Product Details -->
+        <!--Product Details-->
         <div class="flex-1 space-y-2">
             <div>
                 <h3
@@ -122,7 +122,7 @@ const onRemove = () => emit("remove", props.item);
             </p>
         </div>
 
-        <!-- Line Total -->
+        <!--Line Total-->
         <div class="text-right">
             <p class="text-lg font-bold text-slate-900">
                 ${{ lineTotal }}
