@@ -28,6 +28,9 @@ const addToCart = () => {
         },
         {
             preserveScroll: true,
+            onSuccess: () => {
+                router.reload({ only: ["cartCount"] });
+            },
         },
     );
 };

@@ -4,19 +4,27 @@ import { Link, usePage } from "@inertiajs/vue3";
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user || null);
+const cartCount = computed(() => page.props.cartCount ?? 0);
 </script>
 
 <template>
     <div class="min-h-screen bg-white">
         <!--Header layout for all related Pages-->
         <header class="bg-slate-900 border-b border-slate-800">
-            <nav class="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4">
+            <nav
+                class="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4"
+            >
                 <div class="flex items-center gap-8">
                     <div class="text-xl font-bold text-white">
                         <Link href="/">Simple Store</Link>
                     </div>
-                    <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
-                        <Link href="/products" class="hover:text-white transition">
+                    <div
+                        class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300"
+                    >
+                        <Link
+                            href="/products"
+                            class="hover:text-white transition"
+                        >
                             Shop
                         </Link>
                     </div>
@@ -43,6 +51,12 @@ const user = computed(() => page.props.auth?.user || null);
                             <circle cx="10" cy="19" r="1.5" />
                             <circle cx="17" cy="19" r="1.5" />
                         </svg>
+                        <span
+                            v-if="cartCount > 0"
+                            class="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-emerald-500 px-1.5 text-xs font-bold text-white"
+                        >
+                            {{ cartCount > 99 ? "99+" : cartCount }}
+                        </span>
                     </Link>
 
                     <!--User sign in section-->

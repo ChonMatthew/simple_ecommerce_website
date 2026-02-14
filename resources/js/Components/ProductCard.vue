@@ -19,12 +19,12 @@ const addToCart = () => {
 
     router.post(
         "/cart",
-        {
-            product_id: props.product.id,
-            quantity: 1,
-        },
+        { product_id: props.product.id, quantity: 1 },
         {
             preserveScroll: true,
+            onSuccess: () => {
+                router.reload({ only: ["cartCount"] });
+            },
         },
     );
 };
@@ -34,10 +34,7 @@ const addToCart = () => {
     <article
         class="group flex flex-col rounded-lg border border-slate-200 bg-white p-6 shadow-sm hover:shadow-lg transition"
     >
-        <Link
-            :href="`/products/${product.id}`"
-            class="flex flex-col flex-1"
-        >
+        <Link :href="`/products/${product.id}`" class="flex flex-col flex-1">
             <div
                 class="aspect-square w-full overflow-hidden rounded-lg bg-slate-100 mb-4 flex items-center justify-center"
             >

@@ -1,9 +1,10 @@
 <script setup>
 import Layout from "../Layouts/Layout.vue";
+import OrderItemRow from "../Components/OrderItemRow.vue";
 import { computed, ref } from "vue";
-import { router, usePage } from "@inertiajs/vue3";
+import { Link, router, usePage } from "@inertiajs/vue3";
 
-const props = defineProps({
+const { items, total } = defineProps({
     items: {
         type: Array,
         default: () => [],
@@ -71,7 +72,7 @@ const closeModal = () => {
 
                 <!--Empty Cart-->
                 <div
-                    v-if="!props.items.length"
+                    v-if="!items.length"
                     class="rounded-lg border border-dashed border-slate-300 bg-white/60 p-12 text-center text-sm text-slate-600"
                 >
                     Your cart is empty for now.
@@ -79,84 +80,15 @@ const closeModal = () => {
 
                 <!--Cart Items-->
                 <div v-else class="space-y-4">
-                    <div
-                        v-for="item in props.items"
+                    <OrderItemRow
+                        v-for="item in items"
                         :key="item.id"
-                        class="flex items-start gap-4 rounded-lg border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition"
-                    >
-                        <!--Product Image-->
-                        <div
-                            class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-slate-100 flex items-center justify-center"
-                        >
-                            <img
-                                v-if="item.product.image"
-                                :src="item.product.image"
-                                :alt="item.product.name"
-                                class="h-full w-full object-cover"
-                            />
-                            <div
-                                v-else
-                                class="flex h-full w-full items-center justify-center text-xs font-medium text-slate-400 px-2"
-                            >
-                                No image
-                            </div>
-                        </div>
-
-                        <!--Product Details-->
-                        <div class="flex-1 space-y-2">
-                            <div>
-                                <h3
-                                    class="text-lg font-semibold text-slate-900"
-                                >
-                                    {{ item.product.name }}
-                                </h3>
-                                <p class="text-sm text-slate-500">
-                                    ${{ Number(item.product.price).toFixed(2) }}
-                                    each
-                                </p>
-                            </div>
-
-                            <!--Quantity Controls-->
-                            <div class="flex items-center gap-3">
-                                <label
-                                    class="text-sm font-medium text-slate-700"
-                                >
-                                    Quantity:
-                                </label>
-                                <input
-                                    type="number"
-                                    min="1"
-                                    :value="item.quantity"
-                                    class="h-10 w-20 rounded-lg border border-slate-300 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
-                                    @change="
-                                        updateQuantity(
-                                            item,
-                                            $event.target.value,
-                                        )
-                                    "
-                                />
-                                <button
-                                    type="button"
-                                    class="ml-2 text-sm font-medium text-red-600 hover:text-red-700 transition"
-                                    @click="removeItem(item)"
-                                >
-                                    Remove
-                                </button>
-                            </div>
-                        </div>
-
-                        <!--Line Total-->
-                        <div class="text-right">
-                            <p class="text-lg font-bold text-slate-900">
-                                ${{
-                                    (
-                                        Number(item.product.price) *
-                                        item.quantity
-                                    ).toFixed(2)
-                                }}
-                            </p>
-                        </div>
-                    </div>
+                        :item="item"
+                        source="cart"
+                        :show-quantity-controls="true"
+                        @update-quantity="updateQuantity"
+                        @remove="removeItem"
+                    />
 
                     <!--Cart Summary-->
                     <div
@@ -166,13 +98,13 @@ const closeModal = () => {
                             Total
                         </span>
                         <span class="text-2xl font-bold text-emerald-600">
-                            ${{ Number(props.total).toFixed(2) }}
+                            ${{ Number(total).toFixed(2) }}
                         </span>
                     </div>
 
                     <!--Checkout Button-->
                     <div
-                        v-if="props.items.length && user"
+                        v-if="items.length && user"
                         class="flex justify-end pt-4"
                     >
                         <button
@@ -184,7 +116,7 @@ const closeModal = () => {
                         </button>
                     </div>
                     <div
-                        v-else-if="props.items.length && !user"
+                        v-else-if="items.length && !user"
                         class="rounded-lg border border-slate-200 bg-slate-50 px-6 py-4 text-center"
                     >
                         <p class="text-sm text-slate-600">
@@ -225,7 +157,7 @@ const closeModal = () => {
                                 Total Price:
                             </span>
                             <span class="text-2xl font-bold text-emerald-600">
-                                ${{ Number(props.total).toFixed(2) }}
+                                ${{ Number(total).toFixed(2) }}
                             </span>
                         </div>
                     </div>
