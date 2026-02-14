@@ -1,4 +1,4 @@
-E-Commerce Lite 🛍️
+E-Commerce 🛍️
 
 A simple e-commerce platform built with the VILT stack (Vue, Inertia, Laravel, and Tailwind). 
 
