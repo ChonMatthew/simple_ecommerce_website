@@ -26,6 +26,7 @@ class ProductSeeder extends Seeder
                 'name' => $data['name'],
                 'description' => $data['description'],
                 'price' => (float) $data['price'],
+                'stock_quantity' => isset($data['stock_quantity']) ? (int) $data['stock_quantity'] : 10,
                 'image' => ! empty($data['image']) ? $data['image'] : null,
             ]);
         }

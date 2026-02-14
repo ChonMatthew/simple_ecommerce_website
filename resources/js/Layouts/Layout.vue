@@ -1,10 +1,29 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import { Link, usePage } from "@inertiajs/vue3";
+import Toast from "../Components/Toast.vue";
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user || null);
 const cartCount = computed(() => page.props.cartCount ?? 0);
+
+const showToast = ref(false);
+const toastMessage = ref("");
+
+watch(
+    () => page.props.flash?.success ?? page.props.flash?.error,
+    (message) => {
+        if (message) {
+            toastMessage.value = message;
+            showToast.value = true;
+        }
+    },
+    { immediate: true },
+);
+
+const onToastClose = () => {
+    showToast.value = false;
+};
 </script>
 
 <template>
@@ -90,5 +109,11 @@ const cartCount = computed(() => page.props.cartCount ?? 0);
         <main>
             <slot />
         </main>
+
+        <Toast
+            :show="showToast"
+            :message="toastMessage"
+            @close="onToastClose"
+        />
     </div>
 </template>

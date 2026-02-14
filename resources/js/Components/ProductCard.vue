@@ -61,13 +61,19 @@ const addToCart = () => {
             </div>
         </Link>
         <button
-            v-if="user"
+            v-if="user && (product.stock_quantity ?? 0) > 0"
             type="button"
             class="mt-4 inline-flex items-center justify-center rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800 transition"
             @click="addToCart"
         >
             Add to cart
         </button>
+        <div
+            v-else-if="user && (product.stock_quantity ?? 0) <= 0"
+            class="mt-4 inline-flex items-center justify-center rounded-lg bg-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-500 cursor-not-allowed"
+        >
+            Out of stock
+        </div>
         <Link
             v-else
             href="/login"

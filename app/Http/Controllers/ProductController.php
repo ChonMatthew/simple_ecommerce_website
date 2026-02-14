@@ -13,6 +13,7 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'q' => ['nullable', 'string', 'max:255'],
+            'page' => ['nullable', 'integer', 'min:1'],
         ]);
 
         $products = Product::query()
@@ -24,7 +25,8 @@ class ProductController extends Controller
                 });
             })
             ->latest()
-            ->get();
+            ->paginate(12)
+            ->withQueryString();
 
         return Inertia::render('Shop', [
             'products' => $products,

@@ -1,4 +1,5 @@
 <script setup>
+import { Head } from "@inertiajs/vue3";
 import Layout from "../Layouts/Layout.vue";
 import OrderItemRow from "../Components/OrderItemRow.vue";
 import { computed, ref } from "vue";
@@ -59,6 +60,7 @@ const closeModal = () => {
 
 <template>
     <Layout>
+        <Head title="Your Cart" />
         <!--Cart Section-->
         <section class="mx-auto max-w-7xl px-6 py-16">
             <div class="space-y-8">
@@ -73,9 +75,15 @@ const closeModal = () => {
                 <!--Empty Cart-->
                 <div
                     v-if="!items.length"
-                    class="rounded-lg border border-dashed border-slate-300 bg-white/60 p-12 text-center text-sm text-slate-600"
+                    class="rounded-lg border border-dashed border-slate-300 bg-white/60 p-12 text-center text-sm text-slate-600 space-y-4"
                 >
-                    Your cart is empty for now.
+                    <p>Your cart is empty for now.</p>
+                    <Link
+                        href="/products"
+                        class="inline-flex items-center justify-center rounded-lg bg-slate-900 px-6 py-3 text-sm font-semibold text-white hover:bg-slate-800 transition"
+                    >
+                        Continue shopping
+                    </Link>
                 </div>
 
                 <!--Cart Items-->

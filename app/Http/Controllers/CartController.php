@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart_item;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -46,12 +47,25 @@ class CartController extends Controller
         $quantity = $data['quantity'] ?? 1;
         $userId = Auth::id();
 
+        $product = Product::find($data['product_id']);
+        if (! $product || $product->stock_quantity < $quantity) {
+            return redirect()
+                ->back()
+                ->with('error', 'Insufficient stock for this product.');
+        }
+
         $item = Cart_item::where('user_id', $userId)
             ->where('product_id', $data['product_id'])
             ->first();
 
         if ($item) {
-            $item->quantity += $quantity;
+            $newQuantity = $item->quantity + $quantity;
+            if ($product->stock_quantity < $newQuantity) {
+                return redirect()
+                    ->back()
+                    ->with('error', 'Insufficient stock for this product.');
+            }
+            $item->quantity = $newQuantity;
             $item->save();
         } else {
             Cart_item::create([

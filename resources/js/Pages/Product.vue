@@ -1,6 +1,6 @@
 <script setup>
 import Layout from "../Layouts/Layout.vue";
-import { router, Link, usePage } from "@inertiajs/vue3";
+import { Head, router, Link, usePage } from "@inertiajs/vue3";
 import { ref, computed } from "vue";
 
 const props = defineProps({
@@ -19,6 +19,7 @@ const addToCart = () => {
         router.visit("/login");
         return;
     }
+    if ((props.product.stock_quantity ?? 0) < selectedQuantity.value) return;
 
     router.post(
         "/cart",
@@ -38,6 +39,7 @@ const addToCart = () => {
 
 <template>
     <Layout>
+        <Head :title="product.name" />
         <!--Product Detail-->
         <section class="mx-auto max-w-7xl px-6 py-16">
             <div class="grid gap-8 lg:grid-cols-2">
@@ -89,6 +91,7 @@ const addToCart = () => {
                                 v-model.number="selectedQuantity"
                                 type="number"
                                 min="1"
+                                :max="product.stock_quantity ?? 999"
                                 class="h-12 w-24 rounded-lg border border-slate-300 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent"
                             />
                         </div>
@@ -96,13 +99,19 @@ const addToCart = () => {
 
                     <!--Add to Cart-->
                     <button
-                        v-if="user"
+                        v-if="user && (product.stock_quantity ?? 0) > 0"
                         type="button"
                         class="w-full inline-flex items-center justify-center rounded-lg bg-slate-900 px-6 py-4 text-base font-semibold text-white hover:bg-slate-800 transition"
                         @click="addToCart"
                     >
                         Add to Cart
                     </button>
+                    <div
+                        v-else-if="user && (product.stock_quantity ?? 0) <= 0"
+                        class="w-full inline-flex items-center justify-center rounded-lg bg-slate-200 px-6 py-4 text-base font-semibold text-slate-500 cursor-not-allowed"
+                    >
+                        Out of stock
+                    </div>
                     <Link
                         v-else
                         href="/login"

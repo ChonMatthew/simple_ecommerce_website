@@ -1,4 +1,5 @@
 <script setup>
+import { Head } from "@inertiajs/vue3";
 import Layout from "../Layouts/Layout.vue";
 import ProductCard from "../Components/ProductCard.vue";
 
@@ -12,6 +13,7 @@ defineProps({
 
 <template>
     <Layout>
+        <Head title="Home" />
         <!--Hero section-->
         <section
             class="w-full bg-cover bg-center bg-no-repeat py-16 md:py-24 relative"

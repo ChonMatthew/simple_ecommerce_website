@@ -15,11 +15,16 @@ class Product extends Model
         'image',
         'description',
         'price',
+        'stock_quantity',
     ];
 
-    protected $casts = [
-        'price' => 'decimal:2',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'price' => 'decimal:2',
+            'stock_quantity' => 'integer',
+        ];
+    }
 
     public function orderItems(): HasMany
     {

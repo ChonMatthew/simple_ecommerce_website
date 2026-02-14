@@ -1,4 +1,5 @@
 <script setup>
+import { Head } from "@inertiajs/vue3";
 import Layout from "../Layouts/Layout.vue";
 import OrderListItem from "../Components/OrderListItem.vue";
 import OrderDetailsModal from "../Components/OrderDetailsModal.vue";
@@ -62,6 +63,7 @@ const cancelOrder = () => {
 
 <template>
     <Layout>
+        <Head title="My Account" />
         <!-- Account Section - matching Home/Shop/Cart page styling -->
         <section class="mx-auto max-w-7xl px-6 py-16">
             <div class="space-y-8">
